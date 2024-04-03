@@ -22,7 +22,7 @@ public class FieldDescriptionDefault {
 
 	public static void main(String[] args) throws IOException, JSONException {
 		File tableFile = new File(
-				"/Users/bshetty/workspace/git/OneTrustProducer/datasets/target/onetrust/views/users.json");
+				"/Users/bshetty/workspace/git/secret_fix/OneTrustProducer/datasets/target/onetrust/views/inventory_relations.json");
 		String data = IOUtils.toString(new FileInputStream(tableFile));
 
 		JSONTokener tokener = new JSONTokener(data);
@@ -46,7 +46,7 @@ public class FieldDescriptionDefault {
 
 	static void createDescription(JSONObject jo, String fieldName, String parentName) {
 		String name = toWords(jo.getString(fieldName));
-		String desc =  parentName + name + " of the onetrust data user";
+		String desc =  parentName + name + " of the onetrust inventory relations";
 
 		if (desc != null && desc.length() > 0) {
 			String lenDesc = StringUtils.rightPad(desc, 30, " ").replaceAll("\"", "");

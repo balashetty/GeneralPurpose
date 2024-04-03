@@ -41,7 +41,7 @@ public class FieldDescriptionCopier {
 		
 		
 		File csvFile = new File(
-				"/Users/bshetty/workspace/git/OneTrustProducer/datasets/target/onetrust_landing/entities_schema_data.csv");
+				"/Users/bshetty/workspace/git/OneTrustProducer/datasets/target/onetrust_landing/entities_schema_data1.csv");
 		CSVParser csvParser = CSVParser.parse(csvFile, Charset.defaultCharset(),
 				CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
 		Map<String, String> fieldDescriptions = new HashMap<String, String>();
@@ -73,7 +73,7 @@ public class FieldDescriptionCopier {
 		
 		}
 
-		System.out.println(fields.toString(2));
+		//System.out.println(fields.toString(2));
 		
 		PrintWriter writer = new PrintWriter(tableFile);
 		writer.write(fields.toString(2));
