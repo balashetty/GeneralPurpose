@@ -1,0 +1,181 @@
+table_name,view_definition
+processing_activities_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.processing_activities_base`
+entities_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.entities_base`
+users,"select users.* except(name,emails,meta),
+name.*,
+emails.* except (userId),
+meta.*
+from `itd-aia-datalake.onetrust-producer_landing.users_base` users
+left outer join `itd-aia-datalake.onetrust-producer_landing.users_emails` emails on users.id = emails.userId"
+inventory_personal_data,"select inventoryPersonalData.* except(dataSubjectType, dataElement, dataCategories, dataClassifications) ,
+dataSubjectType.id as dataSubjectType_id,
+dataSubjectType.source as dataSubjectType_source,
+dataSubjectType.name as dataSubjectType_name,
+dataSubjectType.nameKey as dataSubjectTypes_nameKey,
+dataSubjectType.description as dataSubjectType_description,
+dataSubjectType.descriptionKey as dataSubjectType_descriptionKey,
+dataElement.id as dataElement_id,
+dataElement.source as dataElement_source,
+dataElement.name as dataElement_name,
+dataElement.nameKey as dataElement_nameKey,
+dataElement.description as dataElement_description,
+dataElement.descriptionKey as dataElement_descriptionKey,
+dataCategories.* except(inventoryPersonalDataId),
+dataClassifications.* except(inventoryPersonalDataId)
+FROM `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data_base` inventoryPersonalData 
+left outer join `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data_categories` dataCategories on dataCategories.inventoryPersonalDataId = inventoryPersonalData.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data_classifications` dataClassifications on dataClassifications.inventoryPersonalDataId = inventoryPersonalData.id"
+processing_activities,"select processingActivities.*   except (businessOwner, processingPurposes, businessFunction, automatedDecisionMaking, 
+dataSubjectRegion, dataSources, customField1003, customField1007, status,organization,updatedBy,createdBy),
+status.key as status_key,
+organization.id as organization_id,organization.value as organization_value,
+createdBy.id as createdBy_id,
+updatedBy.id as updatedBy_id,
+businessOwner.* except(processingActivitiesId),
+businessFunction.* except(processingActivitiesId),
+automatedDecisionMaking.* except(processingActivitiesId),
+dataSubjectRegion.* except(processingActivitiesId),
+dataSources.* except(processingActivitiesId),
+categoryOfProcessingActivity.* except(processingActivitiesId),
+customField1007 as apqcHierarchyIdentifier
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_business_owners` businessOwner on processingActivities.id = businessOwner.processingActivitiesId
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_processing_purposes` processingPurposes on processingActivities.id = processingPurposes.processingActivitiesId
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_business_functions` businessFunction on processingActivities.id = businessFunction.processingActivitiesId
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_automated_decision_makings` automatedDecisionMaking on processingActivities.id = automatedDecisionMaking.processingActivitiesId
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_datasubject_regions` dataSubjectRegion on processingActivities.id = dataSubjectRegion.processingActivitiesId
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_datasources` dataSources on processingActivities.id = dataSources.processingActivitiesId
+left outer join `itd-aia-datalake.onetrust-producer_landing.processing_activities_category_of_processing_activity` categoryOfProcessingActivity on processingActivities.id = categoryOfProcessingActivity.processingActivitiesId"
+vendors_schema,select * from `itd-aia-datalake.onetrust-producer_landing.vendors_schema`
+entities,"select entities.* except(primaryOperatingLocation, status, organization, type, createdBy, updatedBy),
+status.key as status_key,
+organization.id as organization_id,organization.value as organization_value,
+type.* except(entitiesId),
+primaryOperatingLocation.id as primaryOperatingLocation_id,
+primaryOperatingLocation.value as primaryOperatingLocation_value,
+primaryOperatingLocation.valueKey as primaryOperatingLocation_valueKey,
+createdBy.id as createdBy_id,
+updatedBy.id as updatedBy_id,
+FROM `itd-aia-datalake.onetrust-producer_landing.entities_base`  entities
+left outer join `itd-aia-datalake.onetrust-producer_landing.entities_type` type on type.entitiesId = entities.id"
+inventory_relations,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by anchorInventoryId,inventoryAssociationId
+ order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.inventory_relations`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+inventory_personal_data_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data_base`
+data_elements,"select dataElements.* except(categories, classifications) ,
+dataElementsCategories.* except(dataElementsId),
+dataElementsClassifications.* except(dataElementsId)
+FROM `itd-aia-datalake.onetrust-producer_landing.data_elements_base` dataElements 
+left outer join `itd-aia-datalake.onetrust-producer_landing.data_elements_categories` dataElementsCategories on dataElementsCategories.dataElementsId = dataElements.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.data_elements_classifications` dataElementsClassifications on dataElementsClassifications.dataElementsId = dataElements.id
+
+
+ "
+users_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.users_base`
+data_classifications,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.data_classifications`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+assessments_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base`
+assets_schema,select * from `itd-aia-datalake.onetrust-producer_landing.assets_schema`
+data_elements_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.data_elements_base`
+vendors,"select vendors.*  except (owner, status, organization, workflowStage, primaryContact, type, workflow, createdBy, updatedBy, customField1000, customField1002, customField1003),
+owner.* except(vendorId),
+status.key as status_key,
+organization.id as organization_id,organization.value as organization_value,
+workflowStage.stage.id as workflowStage_stage_id, workflowStage.stage.value as workflowStage_stage_value,workflowStage.stage.valueKey as workflowStage_stage_valueKey,
+primaryContact.* except(vendorId),
+type.id as type_id,type.value as type_value,type.valueKey as type_valueKey,
+workflow.id as workflow_id,workflow.value as workflow_value,workflow.valueKey as workflow_valueKey,
+createdBy.id as createdBy_id,
+updatedBy.id as updatedBy_id,
+cui.* except(vendorId),
+assetReviewRequired.* except(vendorId),
+vendorHasAssets.* except(vendorId),
+from `itd-aia-datalake.onetrust-producer_landing.vendors_base` vendors
+left outer join `itd-aia-datalake.onetrust-producer_landing.vendors_owners` owner on vendors.id = owner.vendorId
+left outer join `itd-aia-datalake.onetrust-producer_landing.vendors_primary_contacts` primaryContact on vendors.id = primaryContact.vendorId
+ left outer join `itd-aia-datalake.onetrust-producer_landing.vendors_cui` cui on vendors.id = cui.vendorId
+ left outer join `itd-aia-datalake.onetrust-producer_landing.vendors_asset_review_required` assetReviewRequired on vendors.id = assetReviewRequired.vendorId
+ left outer join `itd-aia-datalake.onetrust-producer_landing.vendors_vendor_has_assets` vendorHasAssets on vendors.id = vendorHasAssets.vendorId"
+inventory_assessments,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by inventoryId, assessmentId order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.inventory_assessments`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+data_subjects,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.data_subjects`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+assets,"select assets.* except(internalOrThirdParty, hostingType, technicalOwner, status, location, createdBy, dataSubjectVolume, organization, storageFormat, type, updatedBy,dataDisposal, customField1000,customField1013,  customField1019, customField1022,customField1008,customField1021, customField1032, customField1030, customField1028, customField1026, customField1005, customField1002, customField1020, customField1016, customField1001, customField1023, customField1009, customField1015),
+customField1023 as friendlyName,
+customField1009 as loginURL,
+customField1015 as dataPrivacyAssessmentDate,
+additionalHostingLocations.* except(assetId),
+assetSeverity.* except(assetId),
+automatedDecisionMaking.* except(assetId),
+crownJewel.* except(assetId),
+assetsCustomField1022.* except(assetId),
+dataDisposal.* except(assetId),
+dataImporters.* except(assetId),
+dataProcessingType.* except(assetId),
+dataSubjectVolume.* except(assetId),
+deploymentType.* except(assetId),
+environment.* except(assetId),
+hostingProviders.* except(assetId),
+hostingType.* except(assetId),
+instance.* except(assetId),
+internalOrThirdParty.* except(assetId),
+infosecServiceOwner.* except(assetId),
+scopeType.* except(assetId),
+storageFormat.* except(assetId),
+technicalOwner.* except(assetId),
+usdgp.* except(assetId),
+vendorAssociated.* except(assetId)
+FROM `itd-aia-datalake.onetrust-producer_landing.assets_base` assets
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_additional_hosting_locations` additionalHostingLocations on additionalHostingLocations.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_asset_severity` assetSeverity on assetSeverity.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_automated_decision_making` automatedDecisionMaking on automatedDecisionMaking.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_crown_jewel` crownJewel on crownJewel.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_customField1022` assetsCustomField1022 on assetsCustomField1022.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_data_disposal` dataDisposal on dataDisposal.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_data_importers` dataImporters on dataImporters.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_data_processing_type` dataProcessingType on dataProcessingType.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_data_subject_volume` dataSubjectVolume on dataSubjectVolume.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_deployment_type` deploymentType on deploymentType.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_environment` environment on environment.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_hosting_providers` hostingProviders on hostingProviders.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_hosting_type` hostingType on hostingType.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_instance` instance on instance.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_internal_or_thirdparty` internalOrThirdParty on internalOrThirdParty.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_infosec_service_owner` infosecServiceOwner on infosecServiceOwner.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_scope_type` scopeType on scopeType.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_storage_format` storageFormat on storageFormat.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_technical_owner` technicalOwner on technicalOwner.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_usdgp` usdgp on usdgp.assetId = assets.id
+left outer join `itd-aia-datalake.onetrust-producer_landing.assets_vendor_associated` vendorAssociated on vendorAssociated.assetId = assets.id"
+assets_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.assets_base`
+entities_schema,select * from `itd-aia-datalake.onetrust-producer_landing.entities_schema`
+processing_activities_schema,select * from `itd-aia-datalake.onetrust-producer_landing.processing_activities_schema`
+data_categories,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.data_categories`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+assessments,"select * FROM
+ (SELECT  *,
+ row_number() over (partition by assessmentId order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+vendors_nested,select * FROM `itd-aia-datalake.onetrust-producer_landing.vendors_base`

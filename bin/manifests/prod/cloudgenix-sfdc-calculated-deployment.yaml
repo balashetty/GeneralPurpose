@@ -1,0 +1,69 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sfdc-cloudgenix-calculated
+  namespace: producer
+spec:
+  schedule: "30 6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: sfdc-cloudgenix-calculated
+            image: GCR_IMAGE_TAG
+            ports:
+            - containerPort: 8080
+            env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /config/secret/itp-aia-sfdc-cl-genix-producer.json
+            - name: spring.config.location
+              value: /config/config/map/sfdc_calculated_application.properties
+            - name: MYSQL_SCHEDULER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: itp-mysql-secret-list
+                  key: scheduler.url
+            - name: MYSQL_SCHEDULER_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: scheduler.username
+                  name: itp-mysql-secret-list
+            - name: MYSQL_SCHEDULER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: scheduler.password
+                  name: itp-mysql-secret-list
+            - name: SALESFORCE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: sfdc-cloudgenix-producer-salesforce-secret-list
+                  key: salesforce.client.id
+            - name: SALESFORCE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sfdc-cloudgenix-producer-salesforce-secret-list
+                  key: salesforce.client.secret
+            - name: SALESFORCE_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: sfdc-cloudgenix-producer-salesforce-secret-list
+                  key: salesforce.user.name
+            - name: SALESFORCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sfdc-cloudgenix-producer-salesforce-secret-list
+                  key: salesforce.password
+            volumeMounts:
+            - name: itp-aia-sfdc-cl-genix-producer-secret
+              mountPath: /config/secret
+            - name: sfdc-cloudgenix-calculated-application-config-map
+              mountPath: /config/config/map
+          volumes:
+          - name: itp-aia-sfdc-cl-genix-producer-secret
+            secret:
+              secretName: itp-aia-sfdc-cl-genix-producer-secret
+          - name: sfdc-cloudgenix-calculated-application-config-map
+            configMap:
+              name: sfdc-cloudgenix-calculated-application-config-map

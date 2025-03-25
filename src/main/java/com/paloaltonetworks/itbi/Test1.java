@@ -13,6 +13,7 @@ public class Test1 {
 		int yi = gcsFilePath.indexOf("year");
 		int mi = gcsFilePath.indexOf("month");
 		String year = gcsFilePath.substring(yi + 5, yi + 5 + 4);
+		
 		String month = gcsFilePath.substring(mi + 6, mi + 6 + 2);
 		System.out.println(year + ":" + month);
 //		String dataFolder = System.getProperty("java.io.tmpdir");
@@ -40,6 +41,10 @@ public class Test1 {
         URI url = uriBuilder.build().encode().toUri();
     	System.out.println("Printing URL:-"+url+"-");	
 		
+    	String str1 = "00DDj00000035zS!AR8AQKy_PHyvJDw5VREyploN3IeYs326rkE5gEBqMN.v_P32Hkla_FpZNtmev6Qv.7geC_sXYOyV6yqdl8yR3w.kbZhadYFV";
+    	String str2 = "00DDj00000035zS!AR8AQKy_PHyvJDw5VREyploN3IeYs326rkE5gEBqMN.v_P32Hkla_FpZNtmev6Qv.7geC_sXYOyV6yqdl8yR3w.kbZhadYFV";
+    	
+    	System.out.println("Comp:" + str1.contentEquals(str2));
 //		log.info("Printing qString:-"+qString+"-");
 	}
 	

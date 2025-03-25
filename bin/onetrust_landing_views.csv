@@ -1,0 +1,372 @@
+table_name,view_definition
+assets_internal_or_thirdparty,"select assets.id as assetId, internalOrThirdParty.id as internalOrThirdParty_id,internalOrThirdParty.value as internalOrThirdParty_value,internalOrThirdParty.valueKey as internalOrThirdParty_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.internalOrThirdParty internalOrThirdParty"
+assets_hosting_type,"select assets.id as assetId, hostingType.id as hostingType_id,hostingType.value as hostingType_value,hostingType.valueKey as hostingType_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.hostingType hostingType"
+assessments_sections_question_responses,"SELECT assessments.assessmentId, sections.sectionId, questions.question.id as questionId, sectionQuestionResponseResponse.responseId,
+sectionQuestionResponse.isLocalVersion as sectionQuestionResponse_isLocalVersion,
+sectionQuestionResponse.relationshipDisplayInformation as sectionQuestionResponse_relationshipDisplayInformation,
+sectionQuestionResponse.parentResponseId as sectionQuestionResponse_parentResponseId,
+sectionQuestionResponse.parentQuestionType as sectionQuestionResponse_parentQuestionType,
+sectionQuestionResponse.effectivenessScale as sectionQuestionResponse_effectivenessScale,
+sectionQuestionResponse.justification as sectionQuestionResponse_justification,
+sectionQuestionResponse.parentAssessmentDetailId as sectionQuestionResponse_parentAssessmentDetailId,
+sectionQuestionResponse.maturityScale as sectionQuestionResponse_maturityScale,
+sectionQuestionResponse.lockReason as sectionQuestionResponse_lockReason,
+sectionQuestionResponse.displayLabel as sectionQuestionResponse_displayLabel,
+sectionQuestionResponseResponse.responseId as sectionQuestionResponseResponse_responseId,
+sectionQuestionResponseResponse.response as sectionQuestionResponseResponse_response,
+sectionQuestionResponseResponse.controlResponse.categoryId as sectionQuestionResponseResponse_controlResponse_categoryId,
+sectionQuestionResponseResponse.controlResponse.controlIdentifier as sectionQuestionResponseResponse_controlResponse_controlIdentifier,
+sectionQuestionResponseResponse.controlResponse.frameworkId as sectionQuestionResponseResponse_controlResponse_frameworkId,
+sectionQuestionResponseResponse.controlResponse.controlId as sectionQuestionResponseResponse_controlResponse_controlId,
+sectionQuestionResponseResponse.controlResponse.categoryName as sectionQuestionResponseResponse_controlResponse_categoryName,
+sectionQuestionResponseResponse.controlResponse.controlName as sectionQuestionResponseResponse_controlResponse_controlName,
+sectionQuestionResponseResponse.controlResponse.frameworkName as sectionQuestionResponseResponse_controlResponse_frameworkName,
+sectionQuestionResponseResponse.type as sectionQuestionResponseResponse_type,
+sectionQuestionResponseResponse.dataElement.id as sectionQuestionResponseResponse_dataElement_id,
+sectionQuestionResponseResponse.dataElement.name as sectionQuestionResponseResponse_dataElement_name,
+sectionQuestionResponseResponse.dataElement.nameKey as sectionQuestionResponseResponse_dataElement_nameKey,
+sectionQuestionResponseResponse.dataCategory.id as sectionQuestionResponseResponse_dataCategory_id,
+sectionQuestionResponseResponse.dataCategory.name as sectionQuestionResponseResponse_dataCategory_name,
+sectionQuestionResponseResponse.dataCategory.nameKey as sectionQuestionResponseResponse_dataCategory_nameKey,
+sectionQuestionResponseResponse.errorCode as sectionQuestionResponseResponse_errorCode,
+sectionQuestionResponseResponse.valid as sectionQuestionResponseResponse_valid,
+sectionQuestionResponseResponse.relationshipResponseDetails as sectionQuestionResponseResponse_relationshipResponseDetails,
+sectionQuestionResponseResponse.responseMap.data_subjects.id as sectionQuestionResponseResponse_responseMap_data_subjects_id,
+sectionQuestionResponseResponse.responseMap.data_subjects.name as sectionQuestionResponseResponse_responseMap_data_subjects_name,
+sectionQuestionResponseResponse.responseMap.data_subjects.nameKey as sectionQuestionResponseResponse_responseMap_data_subjects_nameKey,
+sectionQuestionResponseResponse.responseMap.data_elements.id as sectionQuestionResponseResponse_responseMap_data_elements_id,
+sectionQuestionResponseResponse.responseMap.data_elements.name as sectionQuestionResponseResponse_responseMap_data_elements_name,
+sectionQuestionResponseResponse.responseMap.data_elements.nameKey as sectionQuestionResponseResponse_responseMap_data_elements_nameKey,
+sectionQuestionResponseResponse.responseMap.data_categories.id as sectionQuestionResponseResponse_responseMap_data_categories_id,
+sectionQuestionResponseResponse.responseMap.data_categories.name as sectionQuestionResponseResponse_responseMap_data_categories_name,
+sectionQuestionResponseResponse.responseMap.data_categories.nameKey as sectionQuestionResponseResponse_responseMap_data_categories_nameKey,
+sectionQuestionResponseResponse.contractResponse as sectionQuestionResponseResponse_contractResponse,
+sectionQuestionResponseResponse.responseSourceType as sectionQuestionResponseResponse_responseSourceType,
+sectionQuestionResponseResponse.responseAdditionalDetails.sourceName as sectionQuestionResponseResponse_responseAdditionalDetails_sourceName,
+sectionQuestionResponseResponse.responseAdditionalDetails.entityNumber as sectionQuestionResponseResponse_responseAdditionalDetails_entityNumber,
+sectionQuestionResponseResponse.responseAdditionalDetails.entitySourceType as sectionQuestionResponseResponse_responseAdditionalDetails_entitySourceType,
+sectionQuestionResponseResponse.responseAdditionalDetails.sourceId as sectionQuestionResponseResponse_responseAdditionalDetails_sourceId,
+sectionQuestionResponseResponse.dataSubject.id as sectionQuestionResponseResponse_dataSubject_id,
+sectionQuestionResponseResponse.dataSubject.name as sectionQuestionResponseResponse_dataSubject_name,
+sectionQuestionResponseResponse.dataSubject.nameKey as sectionQuestionResponseResponse_dataSubject_nameKey,
+sectionQuestionResponseResponse.responseKey as sectionQuestionResponseResponse_responseKey
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` assessments, assessments.sections sections, sections.questions questions, questions.questionResponses sectionQuestionResponse, sectionQuestionResponse.responses sectionQuestionResponseResponse"
+assets_regulatory_framework,"select assets.id as assetId,
+regulatoryFramework.id as regulatoryFramework_id,regulatoryFramework.value as regulatoryFramework_value,regulatoryFramework.valueKey as regulatoryFramework_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1018 regulatoryFramework"
+assessments_base,"select * except (rno) FROM
+ (SELECT  *,
+ row_number() over (partition by assessmentId order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+assets_hosting_providers,"select assets.id as assetId, hostingProviders.id as hostingProviders_id,hostingProviders.value as hostingProviders_value,hostingProviders.valueKey as hostingProviders_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1026 hostingProviders"
+inventory_personal_data_categories,"select inventoryPersonalData.id as inventoryPersonalDataId, 
+dataCategory.id as dataCategory_id,
+dataCategory.source as dataCategory_source,
+dataCategory.name as dataCategory_name,
+dataCategory.nameKey as dataCategory_nameKey,
+dataCategory.description as dataCategory_description,
+dataCategory.descriptionKey as dataCategory_descriptionKey,
+FROM `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data_base` inventoryPersonalData, inventoryPersonalData.dataCategories dataCategory
+ "
+users_emails,"select users.id as userId,
+email.primary as email_primary, 
+email.type as email_type,
+email.value as email_value,
+email.display as email_display
+from `itd-aia-datalake.onetrust-producer_landing.users_base` users, users.emails email"
+assets_data_processing_type,"select assets.id as assetId, dataProcessingType.id as dataProcessingType_id,dataProcessingType.value as dataProcessingType_value,dataProcessingType.valueKey as dataProcessingType_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1013 dataProcessingType"
+assets_instance,"select assets.id as assetId,
+instance.id as instance_id,instance.value as instance_value,instance.valueKey as instance_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1020 instance"
+processing_activities_automated_decision_makings,"select processingActivities.id as processingActivitiesId,
+automatedDecisionMaking.id as automatedDecisionMaking_id,automatedDecisionMaking.value as automatedDecisionMaking_value,automatedDecisionMaking.valueKey as automatedDecisionMaking_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities,processingActivities.automatedDecisionMaking automatedDecisionMaking"
+assessments_sections_questions,"SELECT a.assessmentId, sections.sectionId, sectionQuestion.question.id as questionId,
+sections.description as section_description,
+sections.name as section_name,
+sections.hidden as section_hidden,
+sections.submitted as section_submitted,
+sections.submittedDt as section_submittedDt,
+sections.valid as section_valid,
+sections.hasNavigationRules as section_hasNavigationRules,
+sections.sequence as section_sequence,
+sections.header.requiredQuestionIds as section_header_requiredQuestionIds,
+sections.header.effectivenessQuestionIds as section_header_effectivenessQuestionIds,
+sections.header.nameKey as section_header_nameKey,
+sections.header.invalidQuestionIds as section_header_invalidQuestionIds,
+sections.header.requiredUnansweredQuestionIds as section_header_requiredUnansweredQuestionIds,
+sections.header.unansweredQuestionIds as section_header_unansweredQuestionIds,
+sections.header.sectionId as section_header_sectionId,
+sections.header.hidden as section_header_hidden,
+sections.header.name as section_header_name,
+sections.header.sequence as section_header_sequence,
+sections.header.description as section_header_description,
+sections.header.submitted as section_header_submitted,
+sections.header.riskStatistics as section_header_riskStatistics,
+sections.submittedBy.id as section_submittedBy_id,
+sections.submittedBy.name as section_submittedBy_name,
+sections.submittedBy.nameKey as section_submittedBy_nameKey,
+sectionQuestion.canReopenWithAllowEditOption as sectionQuestion_canReopenWithAllowEditOption,
+sectionQuestion.riskCreationAllowed as sectionQuestion_riskCreationAllowed,
+sectionQuestion.rootRequestInformationIds as sectionQuestion_rootRequestInformationIds,
+sectionQuestion.copyErrors as sectionQuestion_copyErrors,
+sectionQuestion.lockReason as sectionQuestion_lockReason,
+sectionQuestion.hasNavigationRules as sectionQuestion_hasNavigationRules,
+sectionQuestion.allowMaturityScaleOnQuestions as sectionQuestion_allowMaturityScaleOnQuestions,
+sectionQuestion.riskDeletionPopupAllowed as sectionQuestion_riskDeletionPopupAllowed,
+sectionQuestion.responseEditableWhileUnderReview as sectionQuestion_responseEditableWhileUnderReview,
+sectionQuestion.totalAttachments as sectionQuestion_totalAttachments,
+sectionQuestion.attachmentIds as sectionQuestion_attachmentIds,
+sectionQuestion.hidden as sectionQuestion_hidden,
+sectionQuestion.question.attachmentIds as sectionQuestion_question_attachmentIds,
+sectionQuestion.question.topic as sectionQuestion_question_topic,
+sectionQuestion.question.attachmentRequired as sectionQuestion_question_attachmentRequired,
+sectionQuestion.question.rootVersionId as sectionQuestion_question_rootVersionId,
+sectionQuestion.question.assetQuestion as sectionQuestion_question_assetQuestion,
+sectionQuestion.question.attributes as sectionQuestion_question_attributes,
+sectionQuestion.question.questionLaws as sectionQuestion_question_questionLaws,
+sectionQuestion.question.linkAssessmentToInventory as sectionQuestion_question_linkAssessmentToInventory,
+sectionQuestion.question.description as sectionQuestion_question_description,
+sectionQuestion.question.friendlyName as sectionQuestion_question_friendlyName,
+sectionQuestion.question.vendorQuestion as sectionQuestion_question_vendorQuestion,
+sectionQuestion.question.allowMultiSelect as sectionQuestion_question_allowMultiSelect,
+sectionQuestion.question.allowJustification as sectionQuestion_question_allowJustification,
+sectionQuestion.question.sequence as sectionQuestion_question_sequence,
+sectionQuestion.question.inventoryTypeEnum as sectionQuestion_question_inventoryTypeEnum,
+sectionQuestion.question.seeded as sectionQuestion_question_seeded,
+sectionQuestion.question.parentQuestionId as sectionQuestion_question_parentQuestionId,
+sectionQuestion.question.attributeId as sectionQuestion_question_attributeId,
+sectionQuestion.question.valid as sectionQuestion_question_valid,
+sectionQuestion.question.prePopulateResponse as sectionQuestion_question_prePopulateResponse,
+sectionQuestion.question.type as sectionQuestion_question_type,
+sectionQuestion.question.content as sectionQuestion_question_content,
+sectionQuestion.question.linkAssessmentToResponseEntity as sectionQuestion_question_linkAssessmentToResponseEntity,
+sectionQuestion.question.requireJustification as sectionQuestion_question_requireJustification,
+sectionQuestion.question.businessKeyReference as sectionQuestion_question_businessKeyReference,
+sectionQuestion.question.forceOther as sectionQuestion_question_forceOther,
+sectionQuestion.question.readOnly as sectionQuestion_question_readOnly,
+sectionQuestion.question.translationIdentifier as sectionQuestion_question_translationIdentifier,
+sectionQuestion.question.paquestion as sectionQuestion_question_paquestion,
+sectionQuestion.question.responseFilter.operator as sectionQuestion_question_responseFilter_operator,
+sectionQuestion.question.responseFilter.filters.customField1003 as sectionQuestion_question_responseFilter_filters_customField1003,
+sectionQuestion.question.responseFilter.filters.type as sectionQuestion_question_responseFilter_filters_type,
+sectionQuestion.question.entityQuestion as sectionQuestion_question_entityQuestion,
+sectionQuestion.question.hint as sectionQuestion_question_hint,
+sectionQuestion.question.isParentQuestionMultiSelect as sectionQuestion_question_isParentQuestionMultiSelect,
+sectionQuestion.question.schema.schemaName as sectionQuestion_question_schema_schemaName,
+sectionQuestion.question.schema.moduleName as sectionQuestion_question_schema_moduleName,
+sectionQuestion.question.questionType as sectionQuestion_question_questionType,
+sectionQuestion.question.required as sectionQuestion_question_required
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` a, a.sections sections, sections.questions sectionQuestion
+"
+entities_base,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.entities`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+processing_activities_base,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.processing_activities`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+assets_legal_hold,"select assets.id as assetId,
+legalHold.id as legalHold_id,legalHold.value as legalHold_value,legalHold.valueKey as legalHold_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1011 legalHold"
+processing_activities_category_of_processing_activity,"select processing_activities.id as processingActivitiesId,
+ customField1003.id as categoryOfProcessingActivity_id,customField1003.value as categoryOfProcessingActivity_value,customField1003.valueKey as categoryOfProcessingActivity_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processing_activities,processing_activities.customField1003 customField1003"
+assets_data_disposal,"select assets.id as assetId, dataDisposal.id as dataDisposal_id,dataDisposal.value as dataDisposal_value,dataDisposal.valueKey as dataDisposal_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.dataDisposal dataDisposal"
+assets_asset_severity,"select assets.id as assetId,
+assetSeverity.id as assetSeverity_id,assetSeverity.value as assetSeverity_value,assetSeverity.valueKey as assetSeverity_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1002 assetSeverity"
+assets_vendor_associated,"select assets.id as assetId,
+vendorAssociated.id as vendorAssociated_id,vendorAssociated.value as vendorAssociated_value,vendorAssociated.valueKey as vendorAssociated_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1032 vendorAssociated"
+assets_automated_decision_making,"select assets.id as assetId,
+automatedDecisionMaking.id as automatedDecisionMaking_id,automatedDecisionMaking.value as automatedDecisionMaking_value,automatedDecisionMaking.valueKey as automatedDecisionMaking_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1021 automatedDecisionMaking"
+processing_activities_datasubject_regions,"select processingActivities.id as processingActivitiesId,
+dataSubjectRegion.id as dataSubjectRegion_id,dataSubjectRegion.value as dataSubjectRegion_value,dataSubjectRegion.valueKey as dataSubjectRegion_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities,processingActivities.dataSubjectRegion dataSubjectRegion"
+data_elements_categories,"select dataElements.id as dataElementsId, 
+categories.id as categories_id,
+categories.source as categories_source,
+categories.name as categories_name,
+categories.nameKey as categories_nameKey,
+categories.description as categories_description,
+categories.descriptionKey as categories_descriptionKey,
+FROM `itd-aia-datalake.onetrust-producer_landing.data_elements_base` dataElements, dataElements.categories categories
+ "
+assets_data_importers,"select assets.id as assetId,
+dataImporters.id as dataImporters_id
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1000 dataImporters"
+assessments_approvers,"SELECT a.assessmentId, approver.id as approverId, 
+approver.resultName as approver_resultName,
+approver.resultNameKey as approver_resultNameKey,
+approver.workflowStageId as approver_workflowStageId,
+approver.approver as approver_approver,
+approver.name as approver_name,
+approver.resultId as approver_resultId,
+approver.approvedOn as approver_approvedOn,
+approver.approvalState as approver_approvalState,
+approver.approver.email as approver_approver_email,
+approver.approver.assigneeType as approver_approver_assigneeType,
+approver.approver.id as approver_approver_id,
+approver.approver.fullName as approver_approver_fullName,
+approver.approver.deleted as approver_approver_deleted
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` a, a.approvers approver"
+assets_crown_jewel,"select assets.id as assetId, customField1001.id as crownJewel_id,customField1001.value as crownJewel_value,customField1001.valueKey as crownJewel_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1001 customField1001"
+inventory_personal_data_base,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+vendors_asset_review_required,"select vendors.id as vendorId, customField1002.id as assetReviewRequired_id,customField1002.value as assetReviewRequired_value,customField1002.valueKey as assetReviewRequired_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.vendors_base` vendors,vendors.customField1002 customField1002"
+assets_base,"select * except (rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.assets`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+vendors_primary_contacts,"select vendors.id as vendorId,primaryContact.id as primaryContact_id,
+from `itd-aia-datalake.onetrust-producer_landing.vendors_base` vendors,vendors.primaryContact primaryContact"
+assets_vendor_approved,"select assets.id as assetId,
+vendorApproved.id as vendorApproved_id,vendorApproved.value as vendorApproved_value,vendorApproved.valueKey as vendorApproved_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1035 vendorApproved"
+vendors_owners,"select vendors.id as vendorId, owner.id as owner_id,
+from `itd-aia-datalake.onetrust-producer_landing.vendors_base` vendors,vendors.owner owner"
+assessments_primary_entity_details,"SELECT assessments.assessmentId, 
+primaryEntityDetails.id as primaryEntityDetails_id, primaryEntityDetails.name as primaryEntityDetails_name,
+primaryEntityDetails.displayName as primaryEntityDetails_displayName, primaryEntityDetails.number as primaryEntityDetails_number,
+primaryEntityDetails.relationshipResponseDetails as primaryEntityDetails_relationshipResponseDetails,
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` assessments, assessments.primaryEntityDetails primaryEntityDetails"
+assets_third_party_disclosures,"select assets.id as assetId,
+thirdPartyDisclosures.id as thirdPartyDisclosures_id,thirdPartyDisclosures.value as thirdPartyDisclosures_value,thirdPartyDisclosures.valueKey as thirdPartyDisclosures_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1024 thirdPartyDisclosures"
+processing_activities_business_functions,"select processingActivities.id as processingActivitiesId,
+businessFunction.id as businessFunction_id,businessFunction.value as businessFunction_value,businessFunction.valueKey as businessFunction_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities,processingActivities.businessFunction businessFunction
+"
+assets_usdgp,"select assets.id as assetId, usdgp.id as usdgp_id,usdgp.value as usdgp_value,usdgp.valueKey as usdgp_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1001 usdgp"
+vendors_vendor_has_assets,"select vendors.id as vendorId, customField1003.id as vendorHasAssets_id,customField1003.value as vendorHasAssets_value,customField1003.valueKey as vendorHasAssets_valueKey
+from `itd-aia-datalake.onetrust-producer_landing.vendors_base` vendors,vendors.customField1003 customField1003"
+inventory_personal_data_classifications,"select inventoryPersonalData.id as inventoryPersonalDataId, 
+dataClassification.id as dataClassification_id,
+dataClassification.source as dataClassification_source,
+dataClassification.name as dataClassification_name,
+dataClassification.nameKey as dataClassification_nameKey,
+dataClassification.description as dataClassification_description,
+dataClassification.descriptionKey as dataClassification_descriptionKey,
+FROM `itd-aia-datalake.onetrust-producer_landing.inventory_personal_data_base` inventoryPersonalData, inventoryPersonalData.dataClassifications dataClassification"
+processing_activities_processing_purposes,"select processingActivities.id as processingActivitiesId,
+processingPurposes.id as processingPurposes_id,processingPurposes.value as processingPurposes_value,processingPurposes.valueKey as processingPurposes_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities,processingActivities.processingPurposes processingPurposes"
+processing_activities_business_owners,"select processingActivities.id as processingActivitiesId,
+businessOwner.id as businessOwner_id
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities,processingActivities.businessOwner businessOwner
+"
+assets_environment,"select assets.id as assetId, environment.id as environment_id,environment.value as environment_value,environment.valueKey as environment_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1008 environment"
+assets_business_owner,"select assets.id as assetId,
+businessOwner.id as businessOwner_id,businessOwner.value as businessOwner_value,businessOwner.valueKey as businessOwner_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1036 businessOwner"
+assets_privacy_assessment_delegates,"select assets.id as assetId,
+privacyAssessmentDelegates.id as privacyAssessmentDelegates_id,privacyAssessmentDelegates.value as privacyAssessmentDelegates_value,privacyAssessmentDelegates.valueKey as privacyAssessmentDelegates_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1034 privacyAssessmentDelegates"
+assessments_sections_question_options,"SELECT a.assessmentId,  sections.sectionId, questions.question.id as questionId,
+questionOption.id as questionOption_id,
+questionOption.option as questionOption_option,
+questionOption.translationIdentifier as questionOption_translationIdentifier,
+questionOption.optionKey as questionOption_optionKey,
+questionOption.score as questionOption_score,
+questionOption.sequence as questionOption_sequence,
+questionOption.optionType as questionOption_optionType,
+questionOption.attributes as questionOption_attributes,
+questionOption.hint as questionOption_hint,
+questionOption.hintKey as questionOption_hintKey
+FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` a, a.sections sections, sections.questions questions, questions.question.options questionOption"
+assets_storage_format,"select assets.id as assetId, storageFormat.id as storageFormat_id,storageFormat.value as storageFormat_value,storageFormat.valueKey as storageFormat_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.storageFormat storageFormat"
+entities_type,"select entities.id as entitiesId,
+type.id as type_id,
+type.value as type_value,
+type.valueKey as type_valueKey
+FROM `itd-aia-datalake.onetrust-producer_landing.entities_base` entities, entities.type type"
+assessments_sections_question_risks,"SELECT a.assessmentId, sections.sectionId, questions.question.id as questionId,risk.riskId,
+risk.level as risk_level,
+risk.score as risk_score
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` a, a.sections sections, sections.questions questions, questions.risks risk"
+assets_additional_hosting_locations,"select assets.id as assetId, additionalHostingLocations.id as additionalHostingLocations_id,additionalHostingLocations.value as additionalHostingLocations_value,additionalHostingLocations.valueKey as additionalHostingLocations_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1028 additionalHostingLocations"
+assets_data_classification,"select assets.id as assetId,
+dataClassification.id as dataClassification_id,dataClassification.value as dataClassification_value,dataClassification.valueKey as dataClassification_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1029 dataClassification"
+processing_activities_datasources,"select processingActivities.id as processingActivitiesId,
+dataSources.id as dataSources_id,dataSources.value as dataSources_value,dataSources.valueKey as dataSources_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.processing_activities_base` processingActivities,processingActivities.dataSources dataSources"
+assets_infosec_service_owner,"select assets.id as assetId, infoSecServiceOwner.id as infoSecServiceOwner_id
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1030 infoSecServiceOwner"
+assessments_respondents,"SELECT a.assessmentId, 
+respondents.id as respondents_id,  respondents.name as respondents_name,  respondents.nameKey as respondents_nameKey,  
+ FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` a, a.respondents respondents"
+assets_scope_type,"select assets.id as assetId, scopeType.id as scopeType_id,scopeType.value as scopeType_value,scopeType.valueKey as scopeType_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1005 scopeType"
+assets_deployment_type,"select assets.id as assetId, deploymentType.id as deploymentType_id,deploymentType.value as deploymentType_value,deploymentType.valueKey as deploymentType_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1008 deploymentType"
+assets_technical_owner,"select assets.id as assetId,
+technicalOwner.id as technicalOwner_id
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.technicalOwner technicalOwner"
+data_elements_classifications,"select dataElements.id as dataElementsId, 
+classifications.id as classifications_id,
+classifications.source as classifications_source,
+classifications.name as classifications_name,
+classifications.nameKey as classifications_nameKey,
+classifications.description as classifications_description,
+classifications.descriptionKey as classifications_descriptionKey,
+FROM `itd-aia-datalake.onetrust-producer_landing.data_elements_base` dataElements, dataElements.classifications classifications"
+assessments_sections_question_associations,"SELECT a.assessmentId, sections.sectionId, questions.question.id as questionId, 
+questionAssociations.associatedQuestionIds as questionAssociation_associatedQuestionIds, 
+questionAssociations.associationType as questionAssociation_associationType, 
+FROM `itd-aia-datalake.onetrust-producer_landing.assessments_base` a, a.sections sections, sections.questions questions,
+questions.questionAssociations questionAssociations"
+vendors_base,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.vendors`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+users_base,"select * except(rno) FROM
+ (SELECT * ,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.users`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"
+assets_custom_status,"select assets.id as assetId,
+customStatus.id as customStatus_id,customStatus.value as customStatus_value,customStatus.valueKey as customStatus_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1031 customStatus"
+vendors_cui,"select vendors.id as vendorId, customField1000.id as cui_id,customField1000.value as cui_value,customField1000.valueKey as cui_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.vendors_base` vendors,vendors.customField1000 customField1000"
+assets_data_subject_volume,"select assets.id as assetId, dataSubjectVolume.id as dataSubjectVolume_id,dataSubjectVolume.value as dataSubjectVolume_value,dataSubjectVolume.valueKey as dataSubjectVolume_valueKey,
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.dataSubjectVolume dataSubjectVolume"
+assets_customField1022,"select assets.id as assetId,
+customField1022.id as customField1022_id
+from `itd-aia-datalake.onetrust-producer_landing.assets_base` assets,assets.customField1022 customField1022"
+data_elements_base,"select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.data_elements`
+ ) as latest_rec 
+ where  latest_rec.rno = 1"

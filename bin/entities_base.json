@@ -1,0 +1,6 @@
+select * except(rno) FROM
+ (SELECT  *,
+ row_number() over (partition by id order by record_ingestion_time desc) rno
+ FROM `itd-aia-datalake.onetrust-producer_landing.entities`
+ ) as latest_rec 
+ where  latest_rec.rno = 1

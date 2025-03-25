@@ -1,0 +1,4 @@
+onetrust_landing
+----
+select assets.id as assetId, scopeType.id as scopeType_id,scopeType.value as scopeType_value,scopeType.valueKey as scopeType_valueKey,
+from `itd-aia-datalake.onetrust_landing.assets_base` assets,assets.customField1005 scopeType

@@ -1,0 +1,69 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sfdc-calculated
+  namespace: producer
+spec:
+  schedule: "30 6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: sfdc-calculated
+            image: GCR_IMAGE_TAG
+            ports:
+            - containerPort: 8080
+            env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /config/secret/itd-sfdc-producer.json
+            - name: spring.config.location
+              value: /config/config/map/sfdc_calculated_application.properties
+            - name: MYSQL_SCHEDULER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: itd-mysql-secret-list
+                  key: scheduler.url
+            - name: MYSQL_SCHEDULER_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: scheduler.username
+                  name: itd-mysql-secret-list
+            - name: MYSQL_SCHEDULER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: scheduler.password
+                  name: itd-mysql-secret-list
+            - name: SALESFORCE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: itd-sfdc-producer-secret-list1
+                  key: salesforce.client.id
+            - name: SALESFORCE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: itd-sfdc-producer-secret-list1
+                  key: salesforce.client.secret
+            - name: SALESFORCE_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: itd-sfdc-producer-secret-list1
+                  key: salesforce.user.name
+            - name: SALESFORCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: itd-sfdc-producer-secret-list1
+                  key: salesforce.password
+            volumeMounts:
+            - name: itd-sfdc-producer-secret
+              mountPath: /config/secret
+            - name: sfdc-calculated-application-config-map
+              mountPath: /config/config/map
+          volumes:
+          - name: itd-sfdc-producer-secret
+            secret:
+              secretName: itd-sfdc-producer-secret
+          - name: sfdc-calculated-application-config-map
+            configMap:
+              name: sfdc-calculated-application-config-map

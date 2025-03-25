@@ -1,0 +1,5 @@
+select entities.id as entitiesId,
+type.id as type_id,
+type.value as type_value,
+type.valueKey as type_valueKey
+FROM `itd-aia-datalake.onetrust-producer_landing.entities_base` entities, entities.type type

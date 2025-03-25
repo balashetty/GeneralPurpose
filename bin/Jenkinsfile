@@ -1,0 +1,15 @@
+#!/usr/bin/env groovy
+
+def PROJECT_NAME       =  'SFDCcaluclated'
+def APPLICATION_NAME   =  'datapipeline'
+def SERVICE_NAME       =  'sfdc-caluclated'
+def POD_LABEL          =  "aia-dp-k8s-maven-${UUID.randomUUID().toString()}"
+
+library identifier: 'aia-jenkins-libraries@master', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'git@panwgithub.paloaltonetworks.local:IT-BI/aia-jenkins-libraries.git',
+   credentialsId: 'df3dcc8c-070f-43c9-b3d0-f3ac49a1a3d1'])
+
+library 'infra-pipeline-utils@v1'
+
+aiaDpK8sMaven(PROJECT_NAME, APPLICATION_NAME, SERVICE_NAME, POD_LABEL)
