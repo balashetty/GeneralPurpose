@@ -2,7 +2,7 @@ package com.shetty;
 
 import java.util.Arrays;
 
-public class Sample1 {
+public class ProductExceptSelf {
 
 	public static void main(String[] args) {
 		System.out.println(productExceptSelf(new int[] {1,3,4})); // 12-4-3
